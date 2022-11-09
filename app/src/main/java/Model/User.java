@@ -4,7 +4,7 @@ package Model;
 
 public class User {
 
-
+    private int id;
     private int age;
     private int health;
     private int sets;
@@ -22,6 +22,7 @@ public class User {
 
     public User(int id,int age, int health, int sets, int reps, int indexofBS, String name){
     this.age = age;
+    this.id = id;
     this.health = health;
     this.sets = sets;
     this.reps = reps;
@@ -79,9 +80,11 @@ public class User {
     }
 
 
+    public int getId() {
+        return id;
+    }
 
-
-
-
-
+    public void setId(int id) {
+        this.id = id;
+    }
 }

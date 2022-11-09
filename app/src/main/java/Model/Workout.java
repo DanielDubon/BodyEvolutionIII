@@ -3,6 +3,7 @@ package Model;
 import java.util.Random;
 
 public class Workout {
+    private int sets;
     private String excersise;
 
 
@@ -49,5 +50,16 @@ public class Workout {
     public void setExcersise(String excersise){
         this.excersise = excersise;
     }
+
+
+    public int getSets() {
+        return sets;
+    }
+
+
+    public void setSets(int sets) {
+        this.sets = sets;
+    }
+
 
 }
