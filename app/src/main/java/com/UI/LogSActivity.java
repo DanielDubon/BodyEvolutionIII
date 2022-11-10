@@ -1,7 +1,7 @@
 package com.UI;
 
 import static com.UI.SigninActivity.user;
-import static Controller.Routinemanager.createRoutine;
+import static Controller.Administrator.createRoutine;
 
 import android.content.Intent;
 import android.database.Cursor;

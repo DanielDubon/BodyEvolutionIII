@@ -2,6 +2,7 @@ package com.UI;
 
 import static com.UI.SigninActivity.user;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainMenu extends AppCompatActivity {
     private TextView tvNombreUsuario;
+
 
 
     @Override
@@ -29,18 +31,16 @@ public class MainMenu extends AppCompatActivity {
         startActivity(intent);
 
     }
-    /*
+
     //BOTONES PENDIENTES DE PROGRAMAR: RECETAS/ANALISIS DE SALUD
-    public void workout(View view){
-        Intent intent  = new Intent(this, EvolveUI.class);
+    public void datacheck(View view){
+        Intent intent  = new Intent(this, DataCheck.class);
         startActivity(intent);
 
     }
-    public void workout(View view){
-        Intent intent  = new Intent(this, EvolveUI.class);
-        startActivity(intent);
 
 
 
- */
+
+
 }

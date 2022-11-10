@@ -4,7 +4,7 @@ package com.UI;
 
 
 
-import static Controller.Routinemanager.createRoutine;
+import static Controller.Administrator.createRoutine;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import Controller.*;
 import Model.User;
 
 public class SigninActivity extends AppCompatActivity {
