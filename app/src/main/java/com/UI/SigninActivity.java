@@ -5,6 +5,7 @@ package com.UI;
 
 
 import static Controller.Administrator.createRoutine;
+import static Controller.Administrator.processcheck;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -23,7 +24,7 @@ import Model.User;
 
 public class SigninActivity extends AppCompatActivity {
 
-    private EditText etnombre, etedad, etestadosalud, etcontra;
+    private EditText etnombre, etedad, etaltura, etpeso,etcontra;
     public static ArrayList<Long> users = new ArrayList<>();
     public static User user;
 
@@ -34,8 +35,9 @@ public class SigninActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         etnombre = findViewById(R.id.etnombre);
+        etpeso  = findViewById(R.id.etpeso);
         etedad = findViewById(R.id.etedad);
-        etestadosalud = findViewById(R.id.etestadosalud);
+        etaltura = findViewById(R.id.etaltura);
         etcontra = findViewById(R.id.etcontra);
 
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"UsersBodyEvolution",null,1);
@@ -66,10 +68,11 @@ public class SigninActivity extends AppCompatActivity {
 
     public void SIGNIN(View view){
 
-        if (!(etedad.getText().toString().equals(""))|| !(etestadosalud.getText().toString().equals("")) || !(etestadosalud.getText().toString().equals("")) || !(etcontra.getText().toString().equals(""))) {
+        if (!(etedad.getText().toString().equals(""))|| !(etpeso.getText().toString().equals("")) || !(etaltura.getText().toString().equals("")) || !(etcontra.getText().toString().equals(""))) {
 
             int edad = Integer.parseInt(etedad.getText().toString());
-            int health = Integer.parseInt(etestadosalud.getText().toString());
+            float altura  = Float.parseFloat(String.valueOf(etaltura.getText()));
+            int peso = Integer.parseInt(String.valueOf(etpeso.getText()));
             String password = etcontra.getText().toString();
             String name = etnombre.getText().toString();
 
@@ -83,12 +86,16 @@ public class SigninActivity extends AppCompatActivity {
             registro.put("nombre",name);
             registro.put("edad",edad);
             registro.put("password",password);
-            registro.put("estadosalud",health);
+            user = new User(currentid,edad, 0, 1, 1, 0, name);
+            processcheck(user,peso,altura);
+            System.out.println("SALUD "+user.getHealth());
+            registro.put("estadosalud",user.getHealth());
 
             BaseDeDatos.insert("currentusers",null,registro);
             BaseDeDatos.close();
             etedad.setText("");
-            etestadosalud.setText("");
+            etpeso.setText("");
+            etaltura.setText("");
             etnombre.setText("");
             etcontra.setText("");
 
@@ -96,7 +103,7 @@ public class SigninActivity extends AppCompatActivity {
             toast.show();
 
 
-            user = new User(currentid,edad, health, 1, 1, 0, name);
+
             createRoutine(user);
             Intent intent = new Intent(this, MainMenu.class);
             startActivity(intent);
