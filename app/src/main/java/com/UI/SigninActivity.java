@@ -4,11 +4,14 @@ package com.UI;
 
 
 
+import static com.UI.SigninActivity.user;
 import static Controller.Administrator.createRoutine;
 import static Controller.Administrator.processcheck;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,6 +26,8 @@ import java.util.ArrayList;
 import Model.User;
 
 public class SigninActivity extends AppCompatActivity {
+
+
 
     private EditText etnombre, etedad, etaltura, etpeso,etcontra;
     public static ArrayList<Long> users = new ArrayList<>();
@@ -59,12 +64,46 @@ public class SigninActivity extends AppCompatActivity {
         cursor.close();
         BaseDeDatos.close();
 
-
+        checkpreferences();
 
 
     }
 
+    private void checkpreferences() {
 
+        SharedPreferences prefs = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String name = prefs.getString("user", "");
+        String password = prefs.getString("password", "");
+        System.out.println("USUARIO RECUPERADO"+ name);
+        System.out.println("CONTRA RECUPERADO"+ password);
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "UsersBodyEvolution", null, 1);
+        SQLiteDatabase BaseDeDatos = admin.getWritableDatabase();
+        if (!(name.equals("")) || !(password.equals(""))) {
+            Cursor fila = BaseDeDatos.rawQuery("select * from currentusers where nombre =" + "'" + name + "'" + "and password =" + "'" + password + "'", null);
+            System.out.println("INGRESAMOS A INICIAR SESION");
+
+            if (fila.moveToFirst()) {
+
+                System.out.println("INGRESAMOS A INICIAR SESION 2");
+                int id = Integer.parseInt(fila.getString(0));
+                String username = fila.getString(1);
+                int edad = Integer.parseInt(fila.getString(3));
+                int estadosalud = Integer.parseInt(fila.getString(4));
+                user = new User(id, edad, estadosalud, 1, 1, 0, username);
+
+                createRoutine(user);
+                Intent intent4 = new Intent(this, MainMenu.class);
+                startActivity(intent4);
+
+                BaseDeDatos.close();
+
+            }else {
+                Toast.makeText(this, "No existe usuario", Toast.LENGTH_SHORT).show();
+                BaseDeDatos.close();
+            }
+        }
+    }
 
     public void SIGNIN(View view){
 
@@ -75,6 +114,12 @@ public class SigninActivity extends AppCompatActivity {
             int peso = Integer.parseInt(String.valueOf(etpeso.getText()));
             String password = etcontra.getText().toString();
             String name = etnombre.getText().toString();
+
+            SharedPreferences prefs = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("user",name);
+            editor.putString("password",password);
+            editor.commit();
 
             AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"UsersBodyEvolution",null,1);
             SQLiteDatabase BaseDeDatos = admin.getWritableDatabase();
@@ -90,7 +135,8 @@ public class SigninActivity extends AppCompatActivity {
             processcheck(user,peso,altura);
             System.out.println("SALUD "+user.getHealth());
             registro.put("estadosalud",user.getHealth());
-
+            prefs.edit().putString("username", user.getName()).apply();
+            prefs.edit().putString("password", password).apply();
             BaseDeDatos.insert("currentusers",null,registro);
             BaseDeDatos.close();
             etedad.setText("");
@@ -111,6 +157,7 @@ public class SigninActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this,"Complete sus datos", Toast.LENGTH_SHORT);
                 toast.show();
         }
+
 
     }
 
